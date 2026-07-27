@@ -33,6 +33,8 @@ flowchart LR
 
 ## 阶段 1 — 导入网格 → 展开 / 指定 Lightmap UV
 
+> 精读目录：[Phase1/](./Phase1/)（模块摘录 + [READ_LIST](./Phase1/READ_LIST.md) + [阅读指南](./Phase1/READING_GUIDE.md)）
+
 导入或 StaticMesh 重建时，若 `FMeshBuildSettings::bGenerateLightmapUVs` 为真，从源 UV 通道找 chart、打包到目标 UV 通道（默认 `DstLightmapIndex = 1`）；`UStaticMesh::LightMapCoordinateIndex` 指向该通道供烘培与运行时使用。
 
 | 角色 | 路径 | 关键符号 |
@@ -46,16 +48,11 @@ flowchart LR
 | FBX 导入 | `Engine/Source/Editor/UnrealEd/.../Fbx*` | `UFbxStaticMeshImportData` / `FbxStaticMeshImport.cpp` |
 | Interchange 导入 | `Engine/Plugins/Interchange/Runtime/...` | `InterchangeStaticMeshFactoryNode`、`InterchangeGeneric*MeshPipeline` |
 
-**建议阅读顺序（UV 展开）：**
-
-1. `LayoutUV.h` / `LayoutUV.cpp`
-2. `StaticMeshOperations.cpp`（`CreateLightMapUVLayout`、`FLayoutUVMeshDescriptionView`）
-3. `MeshDescriptionHelper.cpp`
-4. `EngineTypes.h` 中 `FMeshBuildSettings`
-
 ---
 
 ## 阶段 2 — 设置烘培与场景参数
+
+> 精读目录：[Phase2/](./Phase2/)（模块摘录 + [READ_LIST](./Phase2/READ_LIST.md) + [阅读指南](./Phase2/READING_GUIDE.md)）
 
 配置每网格 LM 通道/分辨率、WorldSettings 中 Lightmass 质量、Importance Volume / Primitive Lightmass 覆盖等。
 
@@ -70,6 +67,8 @@ flowchart LR
 ---
 
 ## 阶段 3 — 收集对象并导出
+
+> 精读目录：[Phase3/](./Phase3/)（模块摘录 + [READ_LIST](./Phase3/READ_LIST.md) + [阅读指南](./Phase3/READING_GUIDE.md)）
 
 编辑器 `FStaticLightingSystem` 收集可烘培 Primitive → 用 `LightMapCoordinateIndex` 建 `FStaticLightingMesh` / Texture Mapping → 经 Swarm 导出给 Lightmass（或走 GPULightmass 接口）。
 
@@ -87,6 +86,8 @@ flowchart LR
 ---
 
 ## 阶段 4 — 求解光照
+
+> 精读目录：[Phase4/](./Phase4/)（**CPU / GPU 分轨** + [READ_LIST](./Phase4/READ_LIST.md) + [阅读指南](./Phase4/READING_GUIDE.md)）
 
 ### 4a CPU UnrealLightmass
 
@@ -115,6 +116,8 @@ flowchart LR
 
 ## 阶段 5 — 写回构建数据
 
+> 精读目录：[Phase5/](./Phase5/)（模块摘录 + [READ_LIST](./Phase5/READ_LIST.md) + [阅读指南](./Phase5/READING_GUIDE.md)）
+
 编辑器导入量化 LM（`ImportTextureMapping` / `ImportLightMapData2DData`）→ 编码贴图 → 将 `FMeshMapBuildData`（LightMap + ShadowMap + UV scale/bias）写入 `UMapBuildDataRegistry`。
 
 | 角色 | 路径 | 关键符号 |
@@ -129,6 +132,8 @@ flowchart LR
 ---
 
 ## 阶段 6 — 运行时按 UV 采样并混合着色
+
+> 精读目录：[Phase6/](./Phase6/)（模块摘录 + [READ_LIST](./Phase6/READ_LIST.md) + [阅读指南](./Phase6/READING_GUIDE.md)）
 
 Vertex Factory 读取 LM UV → 应用 atlas scale/bias → BasePass 选择 `FUniformLightMapPolicy`（HQ/LQ/VT/None）→ `LightmapCommon.ush` 采样解码 → 与其它直接/间接光混合。
 
